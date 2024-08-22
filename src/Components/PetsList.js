@@ -4,17 +4,26 @@ import React, { useState } from "react";
 
 function PetsList() {
   const [query, setQuery] = useState("");
+  const [type, setType] = useState("");
 
-  const petList = pets
-    .filter((pet) => {
-      if (pet.name.toLowerCase().includes(query.toLowerCase())) {
-        return true;
-      }
-    })
-    .map((pet) => <PetItem pet={pet} key={pet.id} />);
+  const petList = pets.filter((pet) => {
+    if (pet.name.toLowerCase().includes(query.toLowerCase())) {
+      return true;
+    }
+  });
 
-  const handelUsername = (event) => {
+  const petFiltered = petList.filter((pet) => pet.type.includes(type));
+
+  const mappedPets = petFiltered.map((pet) => (
+    <PetItem pet={pet} key={pet.id} />
+  ));
+
+  const searchBar = (event) => {
     setQuery(event.target.value);
+  };
+
+  const petSelector = (event) => {
+    setType(event.target.value);
   };
 
   return (
@@ -33,12 +42,12 @@ function PetsList() {
                   placeholder="Search"
                   aria-label="Search"
                   aria-describedby="search-addon"
-                  onChange={handelUsername}
+                  onChange={searchBar}
                 />
               </div>
               <br />
               Type:
-              <select className="form-select">
+              <select onChange={petSelector} className="form-select">
                 <option value="" selected>
                   All
                 </option>
@@ -50,7 +59,7 @@ function PetsList() {
           </div>
         </div>
 
-        <div className="row justify-content-center">{petList}</div>
+        <div className="row justify-content-center">{mappedPets}</div>
       </div>
     </section>
   );
